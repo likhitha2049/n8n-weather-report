@@ -1,0 +1,101 @@
+{
+  "name": "Daily Weather Report",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 7
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        0,
+        0
+      ],
+      "id": "3eddb520-3172-4bf5-a115-ab081b4af2df",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "url": "https://api.openweathermap.org/data/2.5/weather?q=Salem&units=metric&appid=98b56c3036699a653cb7773b813a9476",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        208,
+        0
+      ],
+      "id": "527d926c-7c75-4cf9-9c1c-399442849a70",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "fromEmail": "mlikhithareddy191102@gmail.com",
+        "toEmail": "mlikhithareddy191102@gmail.com",
+        "subject": "Weather for {{$json[\"name\"]}} — {{$round($json[\"main\"][\"temp\"])}}°C, {{$json[\"weather\"][0][\"description\"]}}",
+        "emailFormat": "text",
+        "text": "=Good morning!\n\nToday's weather for {{$json[\"name\"]}}:\n\n• Temperature: {{$json[\"main\"][\"temp\"]}}°C (Feels like {{$json[\"main\"][\"feels_like\"]}}°C)\n• Conditions: {{$json[\"weather\"][0][\"description\"]}}\n• Humidity: {{$json[\"main\"][\"humidity\"]}}%\n• Wind speed: {{$json[\"wind\"][\"speed\"]}} m/s\n\nHave a great day!\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        416,
+        0
+      ],
+      "id": "6de7d385-9e9e-4fa0-9382-10709ce587f9",
+      "name": "Send an Email",
+      "webhookId": "d8e90e7c-77a7-4093-be7f-187a69f619a9",
+      "credentials": {
+        "smtp": {
+          "id": "wTouQ1IW8l7cKMhY",
+          "name": "SMTP account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Send an Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "02c18d12-8a26-4f7c-bcf5-8eb27a5a4c33",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "ba8c702a942a4605d84df5a79197d74d04602269fc5de4c9c712d8670b35f994"
+  },
+  "id": "JXWTChLh6k_LvfNgmo9q6",
+  "tags": []
+}
